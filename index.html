@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gincana Game · Level 15 · João Vítor</title>
-<meta name="description" content="Aperte o START e venha se divertir comigo! 28 e 29/11 · 9h · Fazenda J F, Iaçu.">
+<meta name="description" content="Aperte o START e venha se divertir comigo! 28 e 29/11 · Fazenda J F, Iaçu.">
 <meta property="og:title" content="Gincana Game · Level 15 · João Vítor">
-<meta property="og:description" content="Aperte o START e venha se divertir comigo! 28 e 29/11 · 9h · Fazenda J F, Iaçu.">
+<meta property="og:description" content="Aperte o START e venha se divertir comigo! 28 e 29/11 · Fazenda J F, Iaçu.">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#050506">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -156,6 +156,17 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 40px}
 .info-row .v{font-family:var(--f-title);font-size:25px;line-height:1.05;text-transform:uppercase;margin-top:6px}
 .info-row .s{font-weight:600;color:var(--muted);font-size:14px;margin-top:2px}
 .info .btn{margin-top:18px}
+.hrs{display:flex;gap:22px;margin-top:6px}
+.hrs > div + div{padding-left:22px;border-left:1px solid var(--line)}
+.hrs b{display:block;font-family:var(--f-title);font-weight:400;font-size:25px;line-height:1.05}
+.hrs span{display:block;font-weight:600;color:var(--muted);font-size:14px;margin-top:2px}
+
+/* escolha da turma no RSVP */
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.seg button{padding:12px 6px;background:#000;color:var(--muted);border:1px solid var(--line-strong);cursor:pointer;font:600 15px var(--f-body);line-height:1.25}
+.seg button b{display:block;font-family:var(--f-pixel);font-weight:400;font-size:11px;color:var(--white);margin-bottom:6px}
+.seg button[aria-pressed="true"]{background:var(--white);color:#333;border-color:var(--white)}
+.seg button[aria-pressed="true"] b{color:#000}
 
 /* botões */
 .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;font-family:var(--f-pixel);font-size:10px;
@@ -329,11 +340,16 @@ footer a{color:var(--white);text-decoration:none;font-weight:700}
     </div>
     <div class="info-row">
       <div class="info-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
-      <div><div class="k">HORÁRIO</div><div class="v">Às 9:00</div></div>
+      <div><div class="k">HORÁRIOS</div>
+        <div class="hrs">
+          <div><b>9:00</b><span>Adolescentes</span></div>
+          <div><b>17:00</b><span>Adultos</span></div>
+        </div>
+      </div>
     </div>
     <div class="info-row" style="border-bottom:0">
       <div class="info-ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.6 7-12.2A7 7 0 0 0 5 9.8C5 15.4 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
-      <div><div class="k">LOCAL</div><div class="v">Fazenda J F</div><div class="s">Iaçu · BA</div></div>
+      <div><div class="k">LOCAL</div><div class="v">Fazenda J F</div><div class="s">Zona Rural · Iaçu – BA</div></div>
     </div>
     <a class="btn" id="mapsBtn" href="#" target="_blank" rel="noopener">
       <svg class="i" viewBox="0 0 24 24"><path d="M12 22s7-6.6 7-12.2A7 7 0 0 0 5 9.8C5 15.4 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg>COMO CHEGAR
@@ -387,6 +403,12 @@ footer a{color:var(--white);text-decoration:none;font-weight:700}
     <p>Confirme sua presença pra garantir seu lugar na equipe.</p>
     <label class="field"><span class="k">NOME DO JOGADOR</span>
       <input id="rName" type="text" placeholder="Seu nome" autocomplete="name"></label>
+    <div class="field"><span class="k">SUA TURMA</span>
+      <div class="seg" id="rTurma">
+        <button type="button" data-t="Adolescentes – 9h" aria-pressed="false"><b>9:00</b>Adolescentes</button>
+        <button type="button" data-t="Adultos – 17h" aria-pressed="false"><b>17:00</b>Adultos</button>
+      </div>
+    </div>
     <div class="field"><span class="k">QUANTOS JOGADORES (COM VOCÊ)?</span>
       <div class="stepper"><button type="button" data-d="-1" aria-label="Menos">−</button><output id="rQty">1</output><button type="button" data-d="1" aria-label="Mais">+</button></div>
     </div>
@@ -406,10 +428,15 @@ footer a{color:var(--white);text-decoration:none;font-weight:700}
    CONFIGURAÇÃO — o que muda de um convite pro outro
    ========================================================= */
 const CONFIG = {
-  whatsapp: '557591262495',   // TROCAR: número que recebe as confirmações (55 + DDD + número)
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Fazenda+J+F+Ia%C3%A7u+BA', // TROCAR pelo link exato da fazenda
-  eventStart: '2026-11-28T09:00:00-03:00',
-  aniversariante: 'João Vítor'
+  /* cada turma confirma num WhatsApp diferente (55 + DDD + número) */
+  whatsapp: {
+    'Adolescentes – 9h': '5575991262495',
+    'Adultos – 17h':     '5575991435999'
+  },
+  /* TROCAR pelo link do pin exato da fazenda quando a cliente mandar a localização */
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Fazenda JF, Zona Rural, Iaçu - BA'),
+  aniversariante: 'João Vítor',
+  eventStart: '2026-11-28T09:00:00-03:00'   // contagem regressiva = início da festa (sábado, 9h)
 };
 
 const $ = s => document.querySelector(s);
@@ -795,8 +822,12 @@ $$('.tab').forEach(t => t.addEventListener('click', () => {
 /* =========================================================
    CONFIRMAÇÃO PELO WHATSAPP
    ========================================================= */
-let qty = 1;
-const qtyEl = $('#rQty'), nameEl = $('#rName');
+let qty = 1, turma = '';
+const qtyEl = $('#rQty'), nameEl = $('#rName'), turmaEl = $('#rTurma');
+$$('#rTurma button').forEach(b => b.addEventListener('click', () => {
+  turma = b.dataset.t; sfx.click();
+  $$('#rTurma button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+}));
 $$('.stepper button').forEach(b => b.addEventListener('click', () => {
   qty = Math.min(10, Math.max(1, qty + parseInt(b.dataset.d)));
   qtyEl.textContent = qty; sfx.click();
@@ -807,9 +838,13 @@ $('#rBtn').addEventListener('click', () => {
     nameEl.classList.remove('shake'); void nameEl.offsetWidth; nameEl.classList.add('shake');
     nameEl.focus(); sfx.hit(); return;
   }
+  if (!turma) {
+    turmaEl.classList.remove('shake'); void turmaEl.offsetWidth; turmaEl.classList.add('shake');
+    sfx.hit(); return;
+  }
   sfx.levelup();
-  const msg = `Oi! 🎮 Confirmo presença na *Gincana Game – Level 15* do ${CONFIG.aniversariante}!\n\nJogador: ${name}\nTotal de jogadores: ${qty}`;
-  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+  const msg = `Oi! 🎮 Confirmo presença na *Gincana Game – Level 15* do ${CONFIG.aniversariante}!\n\nJogador: ${name}\nTotal de jogadores: ${qty}\nTurma: ${turma}`;
+  window.open(`https://wa.me/${CONFIG.whatsapp[turma]}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
 /* pausa som e jogo quando a aba fica em segundo plano */
