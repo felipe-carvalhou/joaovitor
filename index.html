@@ -855,7 +855,7 @@ $('#rBtn').addEventListener('click', () => {
   }
   sfx.levelup();
   const msg = `Oi! 🎮 Confirmo presença na *Gincana Game – Level 15* do ${CONFIG.aniversariante}!\n\nJogador: ${name}\nTotal de jogadores: ${qty}\nTurma: ${turma}`;
-  window.open(`https://wa.me/${CONFIG.whatsapp[turma]}?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open(`https://api.whatsapp.com/send?phone=${CONFIG.whatsapp[turma]}&text=${encodeURIComponent(msg)}`, '_blank');
 });
 
 /* pausa som e jogo quando a aba fica em segundo plano */
