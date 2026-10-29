@@ -166,7 +166,8 @@ main{max-width:480px;margin:0 auto;padding:28px 16px 40px}
 .info-row .k{font-family:var(--f-pixel);font-size:7px;color:var(--muted)}
 .info-row .v{font-family:var(--f-title);font-size:25px;line-height:1.05;text-transform:uppercase;margin-top:6px}
 .info-row .s{font-weight:600;color:var(--muted);font-size:14px;margin-top:2px}
-.info .btn{margin-top:18px}
+.nav-btns{display:grid;grid-template-columns:1.6fr 1fr;gap:8px;margin-top:18px}
+.nav-btns .btn{padding:16px 8px}
 .hrs{display:flex;gap:22px;margin-top:6px}
 .hrs > div + div{padding-left:22px;border-left:1px solid var(--line)}
 .hrs b{display:block;font-family:var(--f-title);font-weight:400;font-size:25px;line-height:1.05}
@@ -362,9 +363,14 @@ footer a{color:var(--white);text-decoration:none;font-weight:700}
       <div class="info-ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.6 7-12.2A7 7 0 0 0 5 9.8C5 15.4 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
       <div><div class="k">LOCAL</div><div class="v">Fazenda J F</div><div class="s">Zona Rural · Iaçu – BA</div></div>
     </div>
-    <a class="btn" id="mapsBtn" href="#" target="_blank" rel="noopener">
-      <svg class="i" viewBox="0 0 24 24"><path d="M12 22s7-6.6 7-12.2A7 7 0 0 0 5 9.8C5 15.4 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg>COMO CHEGAR
-    </a>
+    <div class="nav-btns">
+      <a class="btn primary" id="mapsBtn" href="#" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24"><path d="M12 22s7-6.6 7-12.2A7 7 0 0 0 5 9.8C5 15.4 12 22 12 22z"/><circle cx="12" cy="10" r="2.5"/></svg>COMO CHEGAR
+      </a>
+      <a class="btn" id="wazeBtn" href="#" target="_blank" rel="noopener">
+        <svg class="i" viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8z"/></svg>WAZE
+      </a>
+    </div>
   </section>
 
   <!-- ================= CONTAGEM ================= -->
@@ -444,8 +450,8 @@ const CONFIG = {
     'Adolescentes – 9h': '5575991262495',
     'Adultos – 17h':     '5575991435999'
   },
-  /* TROCAR pelo link do pin exato da fazenda quando a cliente mandar a localização */
-  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Fazenda JF, Zona Rural, Iaçu - BA'),
+  /* pino exato da Fazenda J F (enviado pelo caseiro) */
+  local: { lat: -12.757536, lng: -40.314393 },
   aniversariante: 'João Vítor',
   eventStart: '2026-11-28T09:00:00-03:00'   // contagem regressiva = início da festa (sábado, 9h)
 };
@@ -575,7 +581,10 @@ const io = new IntersectionObserver(entries => {
   });
 }, { threshold: .2 });
 
-$('#mapsBtn').href = CONFIG.mapsUrl;
+/* abre a rota já traçada de onde a pessoa está até a fazenda */
+const { lat, lng } = CONFIG.local;
+$('#mapsBtn').href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}&travelmode=driving`;
+$('#wazeBtn').href = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
 
 /* =========================================================
    CONTAGEM REGRESSIVA
